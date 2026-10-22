@@ -16,10 +16,9 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import {
-  Activity, Play, Pause, Square, RotateCcw, FileText, Loader2, Plus, Search,
-  CheckCircle2, XCircle, AlertTriangle, Clock, Layers, ChevronDown, ChevronRight,
-  RefreshCw, Trash2, ArrowRight, ExternalLink, Terminal, ShieldAlert, Zap,
-  BarChart2, Boxes, Crosshair, Filter, Check,
+  Activity, Play, Pause, Square, RotateCcw, FileText, Loader2, Search,
+  CheckCircle2, AlertTriangle, Clock, ChevronDown, ChevronRight,
+  RefreshCw, Trash2, ArrowRight, Terminal, ShieldAlert, Boxes, Crosshair,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -308,8 +307,8 @@ function ScanHistoryCard({
   const isCompleted = ['completed', 'partially_completed'].includes(scan.status);
 
   // Match sources & profiles
-  const attachedSources = (scan.source_ids || []).map((id) => sourcesMap.find((s) => s.id === id) || { id, name: id });
-  const attachedProfiles = (scan.profile_ids || []).map((id) => profilesMap.find((p) => p.id === id) || { id, name: id });
+  const attachedSources = (scan.source_ids || []).map((id) => (Array.isArray(sourcesMap) ? sourcesMap : []).find((s) => s.id === id) || { id, name: id });
+  const attachedProfiles = (scan.profile_ids || []).map((id) => (Array.isArray(profilesMap) ? profilesMap : []).find((p) => p.id === id) || { id, name: id });
 
   return (
     <div className={cn(

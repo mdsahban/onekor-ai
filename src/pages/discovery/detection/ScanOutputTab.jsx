@@ -12,10 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import {
-  FileSearch, Search, Filter, Download, ArrowUpRight, CheckCircle2,
-  AlertCircle, ShieldCheck, Sparkles, Brain, Code, FileCode, Layers,
-  ExternalLink, ChevronRight, Eye, Boxes, Crosshair, Loader2, Database,
-  TrendingUp, Check, AlertTriangle, Info,
+  FileSearch, Search, Download, CheckCircle2, ShieldCheck, Sparkles, Brain, Code, FileCode, Eye, Crosshair, Loader2, Database, Check, AlertTriangle, Info,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
@@ -168,16 +165,20 @@ export default function ScanOutputTab({ initialScanId }) {
             <FileSearch className="h-3.5 w-3.5 text-primary" /> Active Scan Output
           </label>
           <div className="flex items-center gap-3">
-            <Select value={selectedScanId} onValueChange={setSelectedScanId}>
-              <SelectTrigger className="w-[280px] sm:w-[360px] font-medium h-9">
-                <SelectValue placeholder="Select a scan to inspect…" />
+            <Select value={selectedScanId || undefined} onValueChange={setSelectedScanId}>
+              <SelectTrigger className="w-[280px] sm:w-[360px] font-medium h-9" disabled={scans.length === 0}>
+                <SelectValue placeholder={scans.length === 0 ? "No scan executions available" : "Select a scan to inspect…"} />
               </SelectTrigger>
               <SelectContent>
-                {scans.map((s) => (
-                  <SelectItem key={s.id} value={s.id}>
-                    {s.template_name || 'Detection Run'} · {s.started_at ? formatRelative(s.started_at) : s.id.slice(0, 8)} ({s.findings_count || 0} findings)
-                  </SelectItem>
-                ))}
+                {scans.length === 0 ? (
+                  <SelectItem value="_empty" disabled>No scans found</SelectItem>
+                ) : (
+                  scans.map((s) => (
+                    <SelectItem key={s.id} value={s.id}>
+                      {s.template_name || 'Detection Run'} · {s.started_at ? formatRelative(s.started_at) : (s.id ? s.id.slice(0, 8) : 'Scan')} ({s.findings_count || 0} findings)
+                    </SelectItem>
+                  ))
+                )}
               </SelectContent>
             </Select>
           </div>

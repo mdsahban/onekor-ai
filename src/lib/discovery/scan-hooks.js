@@ -85,13 +85,14 @@ export function useScans(enabled = true) {
   return useQuery({
     queryKey: ['scans'],
     queryFn: async () => {
-      const { items } = await base44.entities.Scan.filter({}, { sort: '-created_date', limit: 50 });
-      return items;
+      const page = await base44.entities.Scan.filter({}, { sort: '-created_date', limit: 50 });
+      return page?.items || [];
     },
     enabled,
-    refetchInterval: (data) => {
-      if (!data) return 3000;
-      const hasActive = data.some((s) => ['queued', 'running', 'paused'].includes(s.status));
+    refetchInterval: (query) => {
+      const items = query?.state?.data;
+      if (!Array.isArray(items) || items.length === 0) return false;
+      const hasActive = items.some((s) => ['queued', 'running', 'paused'].includes(s?.status));
       return hasActive ? 3000 : false;
     },
   });
@@ -124,11 +125,12 @@ export function useScan(scanId) {
     queryKey: ['scan', scanId],
     queryFn: async () => {
       if (!scanId) return null;
-      const { items } = await base44.entities.Scan.filter({ id: scanId }, { limit: 1 });
-      return items?.[0] || null;
+      const page = await base44.entities.Scan.filter({ id: scanId }, { limit: 1 });
+      return page?.items?.[0] || null;
     },
     enabled: !!scanId,
-    refetchInterval: (data) => {
+    refetchInterval: (query) => {
+      const data = query?.state?.data;
       if (!data) return false;
       const isActive = ['queued', 'running', 'paused'].includes(data.status);
       return isActive ? 2000 : false;
@@ -154,9 +156,13 @@ export function useScanFindings({ scanId, runIds = [], sourceId } = {}) {
     queryFn: async () => {
       const query = {};
       if (sourceId && sourceId !== 'all') query.source_id = sourceId;
-      const { items = [] } = await base44.entities.DiscoveryFinding.filter(query, { sort: '-created_date', limit: 300 });
+      const page = await base44.entities.DiscoveryFinding.filter(query, { sort: '-created_date', limit: 300 });
+      const items = page?.items || [];
       if (runIds && runIds.length > 0) {
         return items.filter((f) => runIds.includes(f.run_id));
+      }
+      if (scanId) {
+        return [];
       }
       return items;
     },

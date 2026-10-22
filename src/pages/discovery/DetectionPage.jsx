@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNav } from '@/components/layout/AppLayout';
 import { useLanguage } from '@/components/LanguageProvider';
 import { useSearchParams } from 'react-router-dom';
@@ -16,6 +16,16 @@ export default function DetectionPage() {
   const tabParam = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState(tabParam || 'profiles');
   const [drillScanId, setDrillScanId] = useState(searchParams.get('scan') || null);
+
+  useEffect(() => {
+    if (tabParam && tabParam !== activeTab) {
+      setActiveTab(tabParam);
+    }
+    const scanParam = searchParams.get('scan');
+    if (scanParam !== drillScanId) {
+      setDrillScanId(scanParam);
+    }
+  }, [tabParam, searchParams]);
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
