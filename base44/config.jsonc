@@ -1,5 +1,6 @@
+
 {
-  "name": "OneKor AI Project",
+  "name": "OneKor AI Project local",
   "site": {
     "installCommand": "npm install",
     "buildCommand": "npm run build",
