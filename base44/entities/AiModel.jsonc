@@ -1,0 +1,103 @@
+{
+  "name": "AiModel",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string",
+      "enum": [
+        "openai",
+        "anthropic",
+        "google",
+        "custom"
+      ],
+      "default": "openai"
+    },
+    "model_id": {
+      "type": "string",
+      "description": "e.g. gpt-4, claude-3-opus"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "api_base_url": {
+      "type": "string",
+      "description": "API endpoint base URL"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "e.g. text, vision, function_calling, code, reasoning"
+    },
+    "max_tokens": {
+      "type": "number"
+    },
+    "context_window": {
+      "type": "number"
+    },
+    "is_onekor_managed": {
+      "type": "boolean",
+      "default": false,
+      "description": "OneKor-provided vs customer-provided"
+    },
+    "is_validated": {
+      "type": "boolean",
+      "default": false
+    },
+    "last_validated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "validation_status": {
+      "type": "string",
+      "enum": [
+        "not_validated",
+        "validated",
+        "failed"
+      ],
+      "default": "not_validated"
+    },
+    "validation_error": {
+      "type": "string"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "usage_metadata": {
+      "type": "object",
+      "description": "Usage stats if available"
+    },
+    "config": {
+      "type": "object",
+      "description": "Configuration including credential reference (config._api_key stored securely)"
+    }
+  },
+  "required": [
+    "name",
+    "provider",
+    "model_id"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

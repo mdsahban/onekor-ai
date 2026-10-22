@@ -1,0 +1,104 @@
+{
+  "name": "ScanLog",
+  "type": "object",
+  "properties": {
+    "scan_id": {
+      "type": "string",
+      "description": "Reference to Scan"
+    },
+    "template_id": {
+      "type": "string",
+      "description": "Reference to ScanTemplate"
+    },
+    "source_id": {
+      "type": "string",
+      "description": "Reference to DiscoverySource"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warn",
+        "error",
+        "debug",
+        "critical"
+      ],
+      "default": "info"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "lifecycle",
+        "connection",
+        "processing",
+        "detection",
+        "ai_model",
+        "rule",
+        "sampling",
+        "dedup",
+        "enrichment",
+        "error",
+        "warning",
+        "retry",
+        "rate_limit",
+        "timeout",
+        "permission",
+        "connector"
+      ],
+      "default": "lifecycle"
+    },
+    "message": {
+      "type": "string"
+    },
+    "details": {
+      "type": "object",
+      "description": "Technical details shown in expandable section"
+    },
+    "duration_ms": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "scan_id",
+    "message"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,245 @@
+{
+  "name": "ScanTemplate",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "source_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "AI Sources to scan"
+    },
+    "profile_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Detection Profiles to run"
+    },
+    "scan_scope": {
+      "type": "object",
+      "description": "What file/resource types to scan",
+      "properties": {
+        "file_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "include_patterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exclude_patterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sampling": {
+      "type": "object",
+      "description": "Sampling configuration to reduce scan workload",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "percentage": {
+          "type": "number",
+          "default": 100
+        },
+        "strategy": {
+          "type": "string",
+          "enum": [
+            "random",
+            "latest",
+            "priority"
+          ],
+          "default": "latest"
+        }
+      }
+    },
+    "data_limits": {
+      "type": "object",
+      "description": "Caps on scan data",
+      "properties": {
+        "max_resources": {
+          "type": "number"
+        },
+        "max_findings": {
+          "type": "number"
+        },
+        "max_duration_seconds": {
+          "type": "number"
+        }
+      }
+    },
+    "concurrency": {
+      "type": "number",
+      "default": 6,
+      "description": "Parallel requests"
+    },
+    "batch_size": {
+      "type": "number",
+      "default": 6
+    },
+    "rate_limit": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "requests_per_minute": {
+          "type": "number"
+        }
+      }
+    },
+    "timeout_seconds": {
+      "type": "number",
+      "default": 120
+    },
+    "retry_policy": {
+      "type": "object",
+      "properties": {
+        "max_retries": {
+          "type": "number",
+          "default": 2
+        },
+        "backoff": {
+          "type": "string",
+          "enum": [
+            "fixed",
+            "exponential"
+          ],
+          "default": "exponential"
+        }
+      }
+    },
+    "deduplication": {
+      "type": "boolean",
+      "default": true
+    },
+    "confidence_threshold": {
+      "type": "number",
+      "default": 0.5
+    },
+    "evidence_collection": {
+      "type": "boolean",
+      "default": true
+    },
+    "enrichment_enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "scheduling": {
+      "type": "object",
+      "properties": {
+        "frequency": {
+          "type": "string",
+          "enum": [
+            "manual",
+            "hourly",
+            "daily",
+            "weekly"
+          ],
+          "default": "manual"
+        },
+        "next_run": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "incremental_scan": {
+      "type": "boolean",
+      "default": false,
+      "description": "Only scan changed resources"
+    },
+    "change_detection": {
+      "type": "boolean",
+      "default": false
+    },
+    "resource_prioritization": {
+      "type": "object",
+      "properties": {
+        "priority_files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "priority_repos": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_run_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "next_run_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

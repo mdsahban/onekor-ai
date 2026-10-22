@@ -1,0 +1,140 @@
+{
+  "name": "Scan",
+  "type": "object",
+  "properties": {
+    "template_id": {
+      "type": "string",
+      "description": "Reference to ScanTemplate"
+    },
+    "template_name": {
+      "type": "string"
+    },
+    "source_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "profile_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "running",
+        "paused",
+        "completed",
+        "partially_completed",
+        "failed",
+        "cancelled"
+      ],
+      "default": "queued"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_ms": {
+      "type": "number"
+    },
+    "resources_processed": {
+      "type": "number",
+      "default": 0
+    },
+    "resources_skipped": {
+      "type": "number",
+      "default": 0
+    },
+    "findings_count": {
+      "type": "number",
+      "default": 0
+    },
+    "high_confidence_findings": {
+      "type": "number",
+      "default": 0
+    },
+    "low_confidence_findings": {
+      "type": "number",
+      "default": 0
+    },
+    "errors_count": {
+      "type": "number",
+      "default": 0
+    },
+    "ai_model_id": {
+      "type": "string",
+      "description": "AI model used for detection"
+    },
+    "progress": {
+      "type": "number",
+      "default": 0,
+      "description": "0-100"
+    },
+    "current_source": {
+      "type": "string"
+    },
+    "current_resource": {
+      "type": "string"
+    },
+    "error_message": {
+      "type": "string"
+    },
+    "run_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "References to DiscoveryRun records"
+    }
+  },
+  "required": [
+    "template_id"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "create": {},
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

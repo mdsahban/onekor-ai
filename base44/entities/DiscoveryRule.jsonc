@@ -1,0 +1,94 @@
+{
+  "name": "DiscoveryRule",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "package",
+        "import",
+        "config",
+        "file_path",
+        "api_endpoint",
+        "model_identifier",
+        "framework"
+      ]
+    },
+    "pattern": {
+      "type": "string",
+      "description": "Pattern to match (package name, import string, regex, etc.)"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "default": "medium"
+    },
+    "asset_type": {
+      "type": "string",
+      "description": "Asset type to assign on match"
+    },
+    "provider": {
+      "type": "string",
+      "description": "AI provider to assign on match"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "default": "medium"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0.0"
+    }
+  },
+  "required": [
+    "name",
+    "type",
+    "pattern"
+  ],
+  "rls": {
+    "read": {},
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

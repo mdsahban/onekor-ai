@@ -1,0 +1,204 @@
+{
+  "name": "DetectionProfile",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "detection_objective": {
+      "type": "string",
+      "description": "What this profile looks for"
+    },
+    "detection_instructions": {
+      "type": "string",
+      "description": "English-language detection instructions for the AI engine"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "api_key",
+        "ai_model",
+        "ai_agent",
+        "ai_framework",
+        "ai_sdk",
+        "ai_api_endpoint",
+        "mcp",
+        "prompt",
+        "ai_config",
+        "ai_service",
+        "ai_application",
+        "shadow_ai",
+        "sensitive_ai",
+        "ai_workflow",
+        "ai_dependency",
+        "custom"
+      ],
+      "default": "custom"
+    },
+    "detection_methods": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "package",
+          "import",
+          "config",
+          "file_path",
+          "api_endpoint",
+          "model_identifier",
+          "framework",
+          "ai_analysis",
+          "metadata_analysis",
+          "dependency_analysis"
+        ]
+      }
+    },
+    "ai_model_id": {
+      "type": "string",
+      "description": "Reference to AiModel used by the detection engine"
+    },
+    "confidence_threshold": {
+      "type": "number",
+      "default": 0.5,
+      "description": "Minimum confidence for findings (0-1)"
+    },
+    "evidence_requirements": {
+      "type": "object",
+      "description": "Minimum evidence required for a finding",
+      "properties": {
+        "min_matches": {
+          "type": "number",
+          "default": 1
+        },
+        "require_file_evidence": {
+          "type": "boolean",
+          "default": true
+        },
+        "require_line_evidence": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "default": "medium"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0.0"
+    },
+    "is_builtin": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_protected": {
+      "type": "boolean",
+      "default": false,
+      "description": "Protected from destructive changes"
+    },
+    "detection_rules": {
+      "type": "array",
+      "description": "Deterministic detection rules",
+      "items": {
+        "type": "object",
+        "properties": {
+          "pattern": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "package",
+              "import",
+              "config",
+              "file_path",
+              "api_endpoint",
+              "model_identifier",
+              "framework"
+            ]
+          },
+          "asset_type": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium",
+              "low"
+            ]
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ai_prompt": {
+      "type": "string",
+      "description": "AI prompt for LLM analysis of ambiguous signals"
+    },
+    "asset_type": {
+      "type": "string",
+      "description": "Default asset type to assign on match"
+    },
+    "provider": {
+      "type": "string",
+      "description": "Default AI provider to assign on match"
+    },
+    "created_by_name": {
+      "type": "string"
+    },
+    "updated_by_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "category"
+  ],
+  "rls": {
+    "read": {},
+    "create": {},
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

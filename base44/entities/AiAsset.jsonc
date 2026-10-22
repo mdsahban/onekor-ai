@@ -1,0 +1,161 @@
+{
+  "name": "AiAsset",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "asset_type": {
+      "type": "string",
+      "enum": [
+        "ai_application",
+        "ai_agent",
+        "ai_model",
+        "ai_api",
+        "ai_saas",
+        "ai_copilot",
+        "ai_workflow",
+        "ai_platform",
+        "ai_integration",
+        "ai_account",
+        "personal_ai_account",
+        "shadow_ai"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "inactive",
+        "unknown"
+      ],
+      "default": "unknown"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "confidence_score": {
+      "type": "number",
+      "default": 0
+    },
+    "business_owner": {
+      "type": "string"
+    },
+    "technical_owner": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string"
+    },
+    "first_seen": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_seen": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "enriched_data": {
+      "type": "object",
+      "description": "Enrichment metadata separate from discovery evidence"
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "rejected",
+        "needs_review"
+      ],
+      "default": "pending"
+    },
+    "reviewed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reviewed_by": {
+      "type": "string"
+    },
+    "review_notes": {
+      "type": "string"
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low", "unknown"],
+      "default": "unknown"
+    },
+    "risk_score": {
+      "type": "number",
+      "description": "Numeric risk score 0-100",
+      "default": 0
+    },
+    "lifecycle_stage": {
+      "type": "string",
+      "enum": ["active", "deprecated", "sunset", "evaluation", "unknown"],
+      "default": "unknown"
+    },
+    "data_sensitivity": {
+      "type": "string",
+      "enum": ["public", "internal", "confidential", "restricted"]
+    },
+    "regulatory_scope": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Applicable regulations e.g. GDPR, HIPAA"
+    }
+  },
+  "required": [
+    "name",
+    "asset_type"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

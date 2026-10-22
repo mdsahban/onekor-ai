@@ -1,0 +1,113 @@
+{
+  "name": "DiscoveryRun",
+  "type": "object",
+  "properties": {
+    "source_id": {
+      "type": "string",
+      "description": "Reference to DiscoverySource"
+    },
+    "source_name": {
+      "type": "string"
+    },
+    "connector_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "starting",
+        "connecting",
+        "fetching",
+        "analyzing",
+        "classifying",
+        "deduplicating",
+        "enriching",
+        "saving",
+        "completed",
+        "failed",
+        "cancelled"
+      ],
+      "default": "queued"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "duration_ms": {
+      "type": "number"
+    },
+    "repositories_scanned": {
+      "type": "number",
+      "default": 0
+    },
+    "signals_detected": {
+      "type": "number",
+      "default": 0
+    },
+    "findings_created": {
+      "type": "number",
+      "default": 0
+    },
+    "assets_created": {
+      "type": "number",
+      "default": 0
+    },
+    "assets_updated": {
+      "type": "number",
+      "default": 0
+    },
+    "duplicates_detected": {
+      "type": "number",
+      "default": 0
+    },
+    "error_message": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_id"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

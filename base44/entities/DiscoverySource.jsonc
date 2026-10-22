@@ -1,0 +1,134 @@
+{
+  "name": "DiscoverySource",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Human-readable source name"
+    },
+    "connector_id": {
+      "type": "string",
+      "description": "Connector type (github, huggingface, etc.)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "draft",
+        "disabled",
+        "error"
+      ],
+      "default": "active"
+    },
+    "connection_status": {
+      "type": "string",
+      "enum": [
+        "not_configured",
+        "connected",
+        "degraded",
+        "authentication_failed",
+        "permission_denied",
+        "rate_limited",
+        "error",
+        "disabled"
+      ],
+      "default": "not_configured"
+    },
+    "config": {
+      "type": "object",
+      "description": "Connector-specific configuration (auth method, org, repos, filters, discovery settings, inline credentials, etc.)"
+    },
+    "credential_reference": {
+      "type": "string",
+      "description": "Reference to a secret in the secret manager (never the actual secret)"
+    },
+    "scan_frequency": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "hourly",
+        "daily",
+        "weekly"
+      ],
+      "default": "manual"
+    },
+    "last_scan_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "next_scan_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_successful_scan": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "assets_discovered": {
+      "type": "number",
+      "default": 0
+    },
+    "new_assets": {
+      "type": "number",
+      "default": 0
+    },
+    "updated_assets": {
+      "type": "number",
+      "default": 0
+    },
+    "errors_count": {
+      "type": "number",
+      "default": 0
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Metadata collected from the connector after successful discovery"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "connector_id"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

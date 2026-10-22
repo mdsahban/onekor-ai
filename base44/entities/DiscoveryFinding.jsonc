@@ -1,0 +1,119 @@
+{
+  "name": "DiscoveryFinding",
+  "type": "object",
+  "properties": {
+    "source_id": {
+      "type": "string",
+      "description": "Reference to DiscoverySource"
+    },
+    "run_id": {
+      "type": "string",
+      "description": "Reference to DiscoveryRun"
+    },
+    "external_id": {
+      "type": "string",
+      "description": "Connector-specific unique ID (e.g. repo + file path)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the detected AI asset or signal"
+    },
+    "provider": {
+      "type": "string",
+      "description": "AI provider (openai, anthropic, google, etc.)"
+    },
+    "asset_type": {
+      "type": "string",
+      "description": "Detected asset type"
+    },
+    "confidence_score": {
+      "type": "number",
+      "default": 0
+    },
+    "confidence_level": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "default": "low"
+    },
+    "confidence_reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "description": "Evidence object (repository, file, line, signal, etc.)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "classified",
+        "enriched",
+        "deduplicated",
+        "asset_created"
+      ],
+      "default": "new"
+    },
+    "asset_id": {
+      "type": "string",
+      "description": "Reference to AiAsset if one was created/updated"
+    },
+    "enriched": {
+      "type": "boolean",
+      "default": false
+    },
+    "enriched_data": {
+      "type": "object",
+      "description": "Additional metadata from enrichment"
+    }
+  },
+  "required": [
+    "source_id",
+    "name",
+    "evidence"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "name": "generateDetectionProfile",
+  "entry": "entry.ts"
+}
