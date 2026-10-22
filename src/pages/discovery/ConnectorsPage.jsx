@@ -15,8 +15,8 @@ import { pathFor } from '@/lib/navigation';
 function ConnectorStatusBadge({ status }) {
   const meta = CONNECTOR_STATUS_META[status] || CONNECTOR_STATUS_META.coming_soon;
   return (
-    <span className={cn('inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold', meta.bg, meta.color)}>
-      <span className={cn('h-1.5 w-1.5 rounded-full', meta.dot)} />
+    <span className={cn('inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold leading-none', meta.bg, meta.color)}>
+      <span className={cn('h-1.5 w-1.5 shrink-0 rounded-full', meta.dot)} />
       {meta.label}
     </span>
   );
@@ -150,7 +150,6 @@ export default function ConnectorsPage() {
             const Icon = connector.icon;
             const isAvailable = connector.status === 'available' || connector.status === 'beta';
             const sourceCount = sourceCounts.counts[connector.id] || 0;
-            const lastSync = sourceCounts.lastSyncs[connector.id];
             return (
               <div
                 key={connector.id}
@@ -163,7 +162,7 @@ export default function ConnectorsPage() {
                 )}
                 id={`connector-card-${connector.id}`}
               >
-                {/* Header */}
+                {/* 1. Header: Icon, Name, Category under Name, Status Badge */}
                 <div className="flex items-start gap-3">
                   <div
                     className="grid h-11 w-11 shrink-0 place-items-center rounded-xl text-white shadow-sm ring-1 ring-black/10"
@@ -172,47 +171,31 @@ export default function ConnectorsPage() {
                     <Icon className="h-5 w-5" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h3 className="truncate font-display text-base font-semibold text-foreground">{connector.name}</h3>
-                    <p className="text-xs text-muted-foreground">{connector.categoryLabel}</p>
+                    <h3 className="font-display text-sm font-semibold text-foreground leading-snug truncate" title={connector.name}>
+                      {connector.name}
+                    </h3>
+                    <p className="mt-0.5 text-xs text-muted-foreground truncate">{connector.categoryLabel}</p>
                   </div>
                   <ConnectorStatusBadge status={connector.status} />
                 </div>
 
-                {/* Description */}
-                <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{connector.description}</p>
+                {/* 2 & 3. Description: 2 lines with consistent fixed height across all cards */}
+                <p className="mt-3 line-clamp-2 h-10 text-xs text-muted-foreground leading-relaxed" title={connector.description}>
+                  {connector.description}
+                </p>
 
-                {/* Meta */}
-                <div className="mt-4 space-y-1.5 text-xs">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Authentication</span>
-                    <span className="font-medium text-foreground">{connector.authLabel}</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Discovers</span>
-                    <span className="font-medium text-foreground truncate max-w-[130px] text-right">
-                      {connector.capabilityLabels?.slice(0, 2).join(', ')}{connector.capabilityLabels?.length > 2 ? '…' : ''}
-                    </span>
-                  </div>
-                  {sourceCount > 0 && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-muted-foreground">AI Sources</span>
-                      <span className="font-medium text-emerald-600 dark:text-emerald-400">{sourceCount} active</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* CTA */}
-                <div className="mt-4 pt-1">
+                {/* 4. Primary action: Anchored to the exact bottom with mt-auto, consistent button dimensions */}
+                <div className="mt-auto pt-4">
                   {isAvailable ? (
-                    <div className="flex items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-xs font-medium text-primary group-hover:bg-primary/10 transition-colors">
-                      <Plug className="h-3.5 w-3.5" />
-                      {sourceCount > 0 ? 'Configure' : 'Connect'}
-                      <ArrowRight className="ml-auto h-3.5 w-3.5 -translate-x-1 group-hover:translate-x-0 transition-transform" />
+                    <div className="flex h-9 w-full items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 px-3 text-xs font-medium text-primary group-hover:bg-primary/10 transition-colors">
+                      <Plug className="h-3.5 w-3.5 shrink-0" />
+                      <span className="truncate">{sourceCount > 0 ? 'Configure' : 'Connect'}</span>
+                      <ArrowRight className="ml-auto h-3.5 w-3.5 shrink-0 -translate-x-0.5 group-hover:translate-x-0 transition-transform" />
                     </div>
                   ) : (
-                    <div className="flex items-center gap-2 rounded-lg border border-border/60 bg-muted/40 px-3 py-2 text-xs font-medium text-muted-foreground">
-                      <Clock className="h-3.5 w-3.5" />
-                      Coming Soon
+                    <div className="flex h-9 w-full items-center gap-2 rounded-lg border border-border/60 bg-muted/40 px-3 text-xs font-medium text-muted-foreground">
+                      <Clock className="h-3.5 w-3.5 shrink-0" />
+                      <span>Coming Soon</span>
                     </div>
                   )}
                 </div>
@@ -228,8 +211,6 @@ export default function ConnectorsPage() {
               <tr className="border-b border-border/70 bg-muted/30 text-left text-xs uppercase tracking-wider text-muted-foreground">
                 <th className="px-4 py-3 font-medium">Connector</th>
                 <th className="px-4 py-3 font-medium">Category</th>
-                <th className="px-4 py-3 font-medium">Auth</th>
-                <th className="px-4 py-3 font-medium">Discovers</th>
                 <th className="px-4 py-3 font-medium">Status</th>
                 <th className="px-4 py-3 text-center font-medium">Sources</th>
                 <th className="px-4 py-3 text-right font-medium">Action</th>
@@ -255,19 +236,13 @@ export default function ConnectorsPage() {
                         >
                           <Icon className="h-4 w-4" />
                         </div>
-                        <div>
+                        <div className="min-w-0">
                           <p className="font-medium text-foreground">{c.name}</p>
                           <p className="text-xs text-muted-foreground line-clamp-1">{c.description}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{c.categoryLabel}</td>
-                    <td className="px-4 py-3 text-muted-foreground">{c.authLabel}</td>
-                    <td className="px-4 py-3 text-muted-foreground">
-                      <span className="line-clamp-1 text-xs">
-                        {c.capabilityLabels?.slice(0, 3).join(', ')}{c.capabilityLabels?.length > 3 ? '…' : ''}
-                      </span>
-                    </td>
                     <td className="px-4 py-3">
                       <ConnectorStatusBadge status={c.status} />
                     </td>
